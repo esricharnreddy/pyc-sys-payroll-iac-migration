@@ -1,0 +1,6 @@
+// Backup Failures - Detect failed backup jobs
+AzureActivity
+| where OperationNameValue has "Microsoft.RecoveryServices/Vaults/backupJobs"
+| where ActivityStatusValue == "Failed"
+| project TimeGenerated, Resource, OperationNameValue, ActivityStatusValue, Caller
+| sort by TimeGenerated desc

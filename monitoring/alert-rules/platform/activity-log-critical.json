@@ -1,0 +1,27 @@
+{
+  "name": "activity-log-critical",
+  "type": "Microsoft.Insights/activityLogAlerts",
+  "location": "Global",
+  "tags": { "Environment": "UAT", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "displayName": "Critical Activity Log Alert",
+    "description": "Alerts on critical administrative operations (resource deletions)",
+    "enabled": true,
+    "scopes": [
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c"
+    ],
+    "condition": {
+      "allOf": [
+        { "field": "category", "equals": "Administrative" },
+        { "field": "level", "equals": "Critical" }
+      ]
+    },
+    "actions": {
+      "actionGroups": [
+        {
+          "actionGroupId": "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.Insights/actionGroups/migration-alerts-ag"
+        }
+      ]
+    }
+  }
+}

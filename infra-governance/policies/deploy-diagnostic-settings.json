@@ -1,0 +1,46 @@
+{
+  "name": "deploy-diagnostic-settings-keyvault",
+  "properties": {
+    "displayName": "Deploy Diagnostic Settings for Key Vault to Log Analytics workspace",
+    "description": "Deploys diagnostic settings for Key Vault to stream to a Log Analytics workspace",
+    "policyType": "BuiltIn",
+    "mode": "Indexed",
+    "metadata": {
+      "category": "Monitoring"
+    },
+    "parameters": {
+      "logAnalytics": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Log Analytics workspace",
+          "description": "Resource ID of the Log Analytics workspace"
+        }
+      },
+      "effect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": ["DeployIfNotExists", "Disabled"]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "field": "type",
+        "equals": "Microsoft.KeyVault/vaults"
+      },
+      "then": {
+        "effect": "[parameters('effect')]",
+        "details": {
+          "type": "Microsoft.Insights/diagnosticSettings",
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+            "/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+          ],
+          "existenceCondition": {
+            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+            "equals": "true"
+          }
+        }
+      }
+    }
+  }
+}

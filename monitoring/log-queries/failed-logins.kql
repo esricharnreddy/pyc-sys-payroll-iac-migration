@@ -1,0 +1,6 @@
+// Failed Logins - Detect excessive failed authentication attempts
+AzureDiagnostics
+| where Category has "Security"
+| where ResultSignature has "Failed" or status_s == "Failed"
+| summarize FailCount = count() by Resource, bin(TimeGenerated, 5m)
+| where FailCount > 10

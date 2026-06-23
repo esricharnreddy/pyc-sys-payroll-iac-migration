@@ -1,0 +1,5 @@
+// VM Heartbeat - Detect VMs that stopped sending heartbeats
+Heartbeat
+| summarize LastHeartbeat = max(TimeGenerated) by Computer
+| where LastHeartbeat < ago(5m)
+| project Computer, LastHeartbeat, MinutesSinceLastHeartbeat = datetime_diff('minute', now(), LastHeartbeat)

@@ -1,0 +1,30 @@
+{
+  "name": "enforce-environment-tag-values",
+  "properties": {
+    "displayName": "Environment tag must be one of DEV, QA, UAT, PRD",
+    "description": "Ensures the Environment tag value is restricted to approved values only",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "metadata": {
+      "category": "Custom"
+    },
+    "parameters": {},
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "tags['Environment']",
+            "exists": "true"
+          },
+          {
+            "field": "tags['Environment']",
+            "notIn": ["DEV", "QA", "UAT", "PRD"]
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}

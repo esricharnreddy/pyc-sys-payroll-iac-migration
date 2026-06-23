@@ -1,0 +1,6 @@
+// Replication Health - Monitor Azure Migrate replication status
+AzureActivity
+| where OperationNameValue has "Microsoft.RecoveryServices"
+| where Properties has "RPOExceeded" or Properties has "ReplicationHealth"
+| project TimeGenerated, Resource, OperationNameValue, ActivityStatusValue, Properties
+| sort by TimeGenerated desc

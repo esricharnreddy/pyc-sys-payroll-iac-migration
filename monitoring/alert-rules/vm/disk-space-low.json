@@ -1,0 +1,32 @@
+{
+  "name": "disk-space-low",
+  "type": "Microsoft.Insights/scheduledQueryRules",
+  "location": "westus2",
+  "tags": { "Environment": "UAT", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "displayName": "Disk Space Low - VMs",
+    "description": "Alerts when disk free space drops below 20%",
+    "severity": 2,
+    "enabled": true,
+    "evaluationFrequency": "PT15M",
+    "windowSize": "PT15M",
+    "scopes": [
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.OperationalInsights/workspaces/PMI-PRD-WUS2-LAW"
+    ],
+    "criteria": {
+      "allOf": [
+        {
+          "query": "Perf | where ObjectName == 'LogicalDisk' and CounterName == '% Free Space' | where InstanceName != '_Total' | summarize FreePercent = avg(CounterValue) by Computer, InstanceName | where FreePercent < 20",
+          "timeAggregation": "Count",
+          "operator": "GreaterThan",
+          "threshold": 0
+        }
+      ]
+    },
+    "actions": {
+      "actionGroups": [
+        "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.Insights/actionGroups/migration-alerts-ag"
+      ]
+    }
+  }
+}

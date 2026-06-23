@@ -1,0 +1,30 @@
+{
+  "name": "resource-health",
+  "type": "Microsoft.Insights/activityLogAlerts",
+  "location": "Global",
+  "tags": { "Environment": "UAT", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "displayName": "VM Unavailable - Resource Health",
+    "description": "Alerts when VM resource health status becomes Unavailable",
+    "enabled": true,
+    "scopes": [
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c"
+    ],
+    "condition": {
+      "allOf": [
+        { "field": "category", "equals": "ResourceHealth" },
+        { "field": "resourceType", "equals": "Microsoft.Compute/virtualMachines" },
+        { "anyOf": [
+          { "field": "properties.currentHealthStatus", "equals": "Unavailable" }
+        ]}
+      ]
+    },
+    "actions": {
+      "actionGroups": [
+        {
+          "actionGroupId": "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.Insights/actionGroups/migration-alerts-ag"
+        }
+      ]
+    }
+  }
+}

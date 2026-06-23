@@ -1,0 +1,32 @@
+{
+  "name": "sql-failed-logins",
+  "type": "Microsoft.Insights/scheduledQueryRules",
+  "location": "westus2",
+  "tags": { "Environment": "UAT", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "displayName": "Excessive Failed Logins - SQL",
+    "description": "Alerts when failed login attempts exceed threshold",
+    "severity": 1,
+    "enabled": true,
+    "evaluationFrequency": "PT5M",
+    "windowSize": "PT5M",
+    "scopes": [
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.OperationalInsights/workspaces/PMI-PRD-WUS2-LAW"
+    ],
+    "criteria": {
+      "allOf": [
+        {
+          "query": "AzureDiagnostics | where Category has 'Security' | where ResultSignature has 'Failed' or status_s == 'Failed' | summarize FailCount=count() by Resource | where FailCount > 10",
+          "timeAggregation": "Count",
+          "operator": "GreaterThan",
+          "threshold": 0
+        }
+      ]
+    },
+    "actions": {
+      "actionGroups": [
+        "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.Insights/actionGroups/migration-alerts-ag"
+      ]
+    }
+  }
+}

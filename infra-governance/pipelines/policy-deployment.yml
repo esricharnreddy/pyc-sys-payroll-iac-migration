@@ -1,0 +1,130 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra-governance/policies/*
+      - infra-governance/initiatives/*
+      - infra-governance/assignments/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: DeployPolicies
+    displayName: 'Deploy Policy Definitions'
+    jobs:
+      - job: Policies
+        steps:
+          - task: AzureCLI@2
+            displayName: 'Create/Update Policy Definitions'
+            inputs:
+              azureSubscription: 'azure-service-connection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                for file in infra-governance/policies/*.json; do
+                  name=$(jq -r '.name' "$file")
+                  displayName=$(jq -r '.properties.displayName' "$file")
+                  description=$(jq -r '.properties.description' "$file")
+                  mode=$(jq -r '.properties.mode' "$file")
+                  metadata=$(jq -c '.properties.metadata' "$file")
+                  rules=$(jq -c '.properties.policyRule' "$file")
+                  params=$(jq -c '.properties.parameters' "$file")
+
+                  echo "Deploying policy: $displayName"
+                  az policy definition create \
+                    --name "$name" \
+                    --display-name "$displayName" \
+                    --description "$description" \
+                    --mode "$mode" \
+                    --metadata "$metadata" \
+                    --rules "$rules" \
+                    --params "$params" 2>/dev/null || \
+                  az policy definition update \
+                    --name "$name" \
+                    --display-name "$displayName" \
+                    --description "$description" \
+                    --mode "$mode" \
+                    --metadata "$metadata" \
+                    --rules "$rules" \
+                    --params "$params"
+                done
+
+  - stage: DeployInitiatives
+    displayName: 'Deploy Policy Initiatives'
+    dependsOn: DeployPolicies
+    jobs:
+      - job: Initiatives
+        steps:
+          - task: AzureCLI@2
+            displayName: 'Create/Update Initiatives'
+            inputs:
+              azureSubscription: 'azure-service-connection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                for file in infra-governance/initiatives/*.json; do
+                  name=$(jq -r '.name' "$file")
+                  displayName=$(jq -r '.properties.displayName' "$file")
+                  description=$(jq -r '.properties.description' "$file")
+                  metadata=$(jq -c '.properties.metadata' "$file")
+                  params=$(jq -c '.properties.parameters' "$file")
+                  definitions=$(jq -c '.properties.policyDefinitions' "$file")
+                  groups=$(jq -c '.properties.policyDefinitionGroups' "$file")
+
+                  echo "Deploying initiative: $displayName"
+                  az policy set-definition create \
+                    --name "$name" \
+                    --display-name "$displayName" \
+                    --description "$description" \
+                    --metadata "$metadata" \
+                    --params "$params" \
+                    --definitions "$definitions" \
+                    --definition-groups "$groups" 2>/dev/null || \
+                  az policy set-definition update \
+                    --name "$name" \
+                    --display-name "$displayName" \
+                    --description "$description" \
+                    --metadata "$metadata" \
+                    --params "$params" \
+                    --definitions "$definitions" \
+                    --definition-groups "$groups"
+                done
+
+  - stage: DeployAssignments
+    displayName: 'Deploy Policy Assignments'
+    dependsOn: DeployInitiatives
+    jobs:
+      - job: Assignments
+        steps:
+          - task: AzureCLI@2
+            displayName: 'Create/Update Assignments'
+            inputs:
+              azureSubscription: 'azure-service-connection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                for file in infra-governance/assignments/*.json; do
+                  name=$(jq -r '.name' "$file")
+                  displayName=$(jq -r '.properties.displayName' "$file")
+                  scope=$(jq -r '.properties.scope' "$file")
+                  policySetDef=$(jq -r '.properties.policyDefinitionId' "$file")
+                  location=$(jq -r '.properties.location' "$file")
+                  params=$(jq -c '.properties.parameters' "$file")
+
+                  echo "Assigning: $displayName to $scope"
+                  az policy assignment create \
+                    --name "$name" \
+                    --display-name "$displayName" \
+                    --scope "$scope" \
+                    --policy-set-definition "$policySetDef" \
+                    --params "$params" \
+                    --mi-system-assigned \
+                    --location "$location" 2>/dev/null || \
+                  az policy assignment update \
+                    --name "$name" \
+                    --scope "$scope" \
+                    --params "$params"
+                done

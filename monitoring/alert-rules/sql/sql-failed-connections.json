@@ -1,0 +1,35 @@
+{
+  "name": "sql-failed-connections",
+  "type": "Microsoft.Insights/metricAlerts",
+  "location": "Global",
+  "tags": { "Environment": "UAT", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "displayName": "Failed Connections - SQL DB",
+    "description": "Alerts when failed connections exceed 10 in 5 minutes",
+    "severity": 2,
+    "enabled": true,
+    "evaluationFrequency": "PT5M",
+    "windowSize": "PT5M",
+    "scopes": [
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PAY-UAT-EUS2-APP-RG/providers/Microsoft.Sql/servers/sql-uat-app/databases/FinanceDB",
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PAY-UAT-EUS2-APP-RG/providers/Microsoft.Sql/servers/sql-uat-app/databases/HRDB",
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PAY-UAT-EUS2-APP-RG/providers/Microsoft.Sql/servers/sql-uat-app/databases/SalesDB",
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PAY-UAT-EUS2-APP-RG/providers/Microsoft.Sql/servers/sql-uat-app/databases/InventoryDB"
+    ],
+    "criteria": {
+      "allOf": [
+        {
+          "metricName": "connection_failed",
+          "operator": "GreaterThan",
+          "threshold": 10,
+          "timeAggregation": "Total"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "actionGroupId": "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.Insights/actionGroups/migration-alerts-ag"
+      }
+    ]
+  }
+}

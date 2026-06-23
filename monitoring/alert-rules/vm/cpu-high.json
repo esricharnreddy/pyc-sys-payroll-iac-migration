@@ -1,0 +1,33 @@
+{
+  "name": "cpu-high",
+  "type": "Microsoft.Insights/metricAlerts",
+  "location": "Global",
+  "tags": { "Environment": "UAT", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "displayName": "High CPU Usage - VMs",
+    "description": "Alerts when VM CPU exceeds 80% for 10 minutes",
+    "severity": 2,
+    "enabled": true,
+    "evaluationFrequency": "PT5M",
+    "windowSize": "PT10M",
+    "scopes": [
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG"
+    ],
+    "criteria": {
+      "allOf": [
+        {
+          "metricName": "Percentage CPU",
+          "metricNamespace": "Microsoft.Compute/virtualMachines",
+          "operator": "GreaterThan",
+          "threshold": 80,
+          "timeAggregation": "Average"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "actionGroupId": "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.Insights/actionGroups/migration-alerts-ag"
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "migration-failure",
+  "type": "Microsoft.Insights/scheduledQueryRules",
+  "location": "westus2",
+  "tags": { "Environment": "UAT", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "displayName": "Migration Failure",
+    "description": "Alerts when database migration task fails",
+    "severity": 1,
+    "enabled": true,
+    "evaluationFrequency": "PT5M",
+    "windowSize": "PT15M",
+    "scopes": [
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.OperationalInsights/workspaces/PMI-PRD-WUS2-LAW"
+    ],
+    "criteria": {
+      "allOf": [
+        {
+          "query": "AzureActivity | where OperationNameValue has 'Microsoft.DataMigration' | where ActivityStatusValue == 'Failed' | summarize count() by Resource",
+          "timeAggregation": "Count",
+          "operator": "GreaterThan",
+          "threshold": 0
+        }
+      ]
+    },
+    "actions": {
+      "actionGroups": [
+        "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.Insights/actionGroups/migration-alerts-ag"
+      ]
+    }
+  }
+}

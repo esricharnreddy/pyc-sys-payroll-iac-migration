@@ -1,0 +1,30 @@
+{
+  "name": "require-tls12-sql",
+  "properties": {
+    "displayName": "Require minimum TLS 1.2 on SQL servers",
+    "description": "SQL servers must use TLS 1.2 or higher for secure connections",
+    "policyType": "Custom",
+    "mode": "All",
+    "metadata": {
+      "category": "Custom"
+    },
+    "parameters": {},
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Sql/servers"
+          },
+          {
+            "field": "Microsoft.Sql/servers/minimalTlsVersion",
+            "notEquals": "1.2"
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}

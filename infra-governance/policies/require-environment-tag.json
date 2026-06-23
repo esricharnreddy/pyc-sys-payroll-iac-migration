@@ -1,0 +1,22 @@
+{
+  "name": "require-environment-tag",
+  "properties": {
+    "displayName": "Require Environment tag on resources",
+    "description": "Denies creation of resources without an Environment tag",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "metadata": {
+      "category": "Tags"
+    },
+    "parameters": {},
+    "policyRule": {
+      "if": {
+        "field": "tags['Environment']",
+        "exists": "false"
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}

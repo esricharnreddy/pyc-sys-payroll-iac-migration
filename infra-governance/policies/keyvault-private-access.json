@@ -1,0 +1,30 @@
+{
+  "name": "keyvault-private-access",
+  "properties": {
+    "displayName": "Azure Key Vault should disable public network access",
+    "description": "Audits Key Vaults that have public network access enabled",
+    "policyType": "BuiltIn",
+    "mode": "Indexed",
+    "metadata": {
+      "category": "Key Vault"
+    },
+    "parameters": {},
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.KeyVault/vaults"
+          },
+          {
+            "field": "Microsoft.KeyVault/vaults/publicNetworkAccess",
+            "notEquals": "Disabled"
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}

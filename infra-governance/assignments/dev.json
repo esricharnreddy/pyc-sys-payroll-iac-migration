@@ -1,0 +1,21 @@
+{
+  "name": "migration-baseline-dev",
+  "properties": {
+    "displayName": "Migration Governance Baseline - DEV",
+    "description": "Assigns the migration governance baseline to DEV resource groups",
+    "policyDefinitionId": "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/providers/Microsoft.Authorization/policySetDefinitions/pol-migration-baseline",
+    "scope": "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-USE-SHR-RG",
+    "location": "australiaeast",
+    "identity": {
+      "type": "SystemAssigned"
+    },
+    "parameters": {
+      "tagName1": { "value": "Environment" },
+      "tagName2": { "value": "Application" },
+      "tagName3": { "value": "CostCenter" },
+      "inheritTagName": { "value": "Environment" },
+      "allowedLocations": { "value": ["centralus", "australiaeast", "westus2", "eastus", "eastus2"] },
+      "logAnalyticsWorkspace": { "value": "" }
+    }
+  }
+}

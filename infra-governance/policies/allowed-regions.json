@@ -1,0 +1,43 @@
+{
+  "name": "allowed-regions",
+  "properties": {
+    "displayName": "Allowed locations for resource deployment",
+    "description": "Restricts resource creation to approved Azure regions only",
+    "policyType": "BuiltIn",
+    "mode": "Indexed",
+    "metadata": {
+      "category": "General"
+    },
+    "parameters": {
+      "listOfAllowedLocations": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Allowed Locations",
+          "description": "List of allowed Azure regions"
+        },
+        "defaultValue": ["centralus", "australiaeast", "westus2", "eastus", "eastus2"]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "location",
+            "notIn": "[parameters('listOfAllowedLocations')]"
+          },
+          {
+            "field": "location",
+            "notEquals": "global"
+          },
+          {
+            "field": "type",
+            "notEquals": "Microsoft.Resources/subscriptions/resourceGroups"
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}

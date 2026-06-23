@@ -1,0 +1,112 @@
+{
+  "name": "pol-migration-baseline",
+  "properties": {
+    "displayName": "Infrastructure & Database Migration Governance Baseline",
+    "description": "Policy initiative for migration governance including tagging, location, security, operations and recovery",
+    "policyType": "Custom",
+    "metadata": {
+      "category": "Custom"
+    },
+    "parameters": {
+      "tagName1": {
+        "type": "String",
+        "metadata": { "displayName": "Required Tag 1" },
+        "defaultValue": "Environment"
+      },
+      "tagName2": {
+        "type": "String",
+        "metadata": { "displayName": "Required Tag 2" },
+        "defaultValue": "Application"
+      },
+      "tagName3": {
+        "type": "String",
+        "metadata": { "displayName": "Required Tag 3" },
+        "defaultValue": "CostCenter"
+      },
+      "inheritTagName": {
+        "type": "String",
+        "metadata": { "displayName": "Tag to inherit from resource group" },
+        "defaultValue": "Environment"
+      },
+      "allowedLocations": {
+        "type": "Array",
+        "metadata": { "displayName": "Allowed Locations" },
+        "defaultValue": ["centralus", "australiaeast", "westus2", "eastus", "eastus2"]
+      },
+      "logAnalyticsWorkspace": {
+        "type": "String",
+        "metadata": { "displayName": "Log Analytics Workspace ID" },
+        "defaultValue": ""
+      }
+    },
+    "policyDefinitionGroups": [
+      { "name": "Governance", "displayName": "Governance" },
+      { "name": "Compliance", "displayName": "Compliance" },
+      { "name": "Security", "displayName": "Security" },
+      { "name": "Operations", "displayName": "Operations" },
+      { "name": "Recovery", "displayName": "Recovery" }
+    ],
+    "policyDefinitions": [
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/871b6d14-10aa-478d-b590-94f262ecfa99",
+        "policyDefinitionReferenceId": "RequireEnvironmentTag",
+        "parameters": { "tagName": { "value": "[parameters('tagName1')]" } },
+        "groupNames": ["Governance"]
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/871b6d14-10aa-478d-b590-94f262ecfa99",
+        "policyDefinitionReferenceId": "RequireApplicationTag",
+        "parameters": { "tagName": { "value": "[parameters('tagName2')]" } },
+        "groupNames": ["Governance"]
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/871b6d14-10aa-478d-b590-94f262ecfa99",
+        "policyDefinitionReferenceId": "RequireCostCenterTag",
+        "parameters": { "tagName": { "value": "[parameters('tagName3')]" } },
+        "groupNames": ["Governance"]
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/ea3f2387-9b95-492a-a190-fcdc54f7b070",
+        "policyDefinitionReferenceId": "InheritTagFromRG",
+        "parameters": { "tagName": { "value": "[parameters('inheritTagName')]" } },
+        "groupNames": ["Governance"]
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
+        "policyDefinitionReferenceId": "AllowedLocations",
+        "parameters": { "listOfAllowedLocations": { "value": "[parameters('allowedLocations')]" } },
+        "groupNames": ["Compliance"]
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e71308d3-144b-4262-b144-efdc3cc90517",
+        "policyDefinitionReferenceId": "NSGOnSubnets",
+        "parameters": {},
+        "groupNames": ["Security"]
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/404c3081-a854-4457-ae30-26a93ef643f9",
+        "policyDefinitionReferenceId": "SecureTransferStorage",
+        "parameters": {},
+        "groupNames": ["Security"]
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/55615ac9-af46-4a59-874e-391cc3dfb490",
+        "policyDefinitionReferenceId": "KeyVaultDisablePublicAccess",
+        "parameters": {},
+        "groupNames": ["Security"]
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/bef3f64c-5290-43b7-85b0-9b254eef4c47",
+        "policyDefinitionReferenceId": "DiagnosticSettingsKeyVault",
+        "parameters": { "logAnalytics": { "value": "[parameters('logAnalyticsWorkspace')]" } },
+        "groupNames": ["Operations"]
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/013e242c-8828-4970-87b3-ab247555486d",
+        "policyDefinitionReferenceId": "AzureBackupVMs",
+        "parameters": {},
+        "groupNames": ["Recovery"]
+      }
+    ]
+  }
+}

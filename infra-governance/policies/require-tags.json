@@ -1,0 +1,30 @@
+{
+  "name": "require-tags-on-resources",
+  "properties": {
+    "displayName": "Require tags on resources",
+    "description": "Denies creation of resources without required tags (Environment, Application, CostCenter)",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "metadata": {
+      "category": "Tags"
+    },
+    "parameters": {
+      "tagName": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag Name",
+          "description": "Name of the required tag"
+        }
+      }
+    },
+    "policyRule": {
+      "if": {
+        "field": "[concat('tags[', parameters('tagName'), ']')]",
+        "exists": "false"
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "storage-secure-transfer",
+  "properties": {
+    "displayName": "Secure transfer to storage accounts should be enabled",
+    "description": "Audits storage accounts that do not have secure transfer (HTTPS) enabled",
+    "policyType": "BuiltIn",
+    "mode": "Indexed",
+    "metadata": {
+      "category": "Storage"
+    },
+    "parameters": {},
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "field": "Microsoft.Storage/storageAccounts/supportsHttpsTrafficOnly",
+            "notEquals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}

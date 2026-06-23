@@ -1,0 +1,27 @@
+{
+  "name": "privileged-role-assignment",
+  "type": "Microsoft.Insights/activityLogAlerts",
+  "location": "Global",
+  "tags": { "Environment": "UAT", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "displayName": "Privileged Role Assignment Detected",
+    "description": "Alerts when a privileged role assignment is created",
+    "enabled": true,
+    "scopes": [
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c"
+    ],
+    "condition": {
+      "allOf": [
+        { "field": "category", "equals": "Administrative" },
+        { "field": "operationName", "equals": "Microsoft.Authorization/roleAssignments/write" }
+      ]
+    },
+    "actions": {
+      "actionGroups": [
+        {
+          "actionGroupId": "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.Insights/actionGroups/migration-alerts-ag"
+        }
+      ]
+    }
+  }
+}

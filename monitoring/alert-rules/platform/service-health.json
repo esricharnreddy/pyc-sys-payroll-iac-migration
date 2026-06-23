@@ -1,0 +1,30 @@
+{
+  "name": "service-health",
+  "type": "Microsoft.Insights/activityLogAlerts",
+  "location": "Global",
+  "tags": { "Environment": "UAT", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "displayName": "Azure Service Health Alert",
+    "description": "Alerts on Azure service incidents affecting your regions",
+    "enabled": true,
+    "scopes": [
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c"
+    ],
+    "condition": {
+      "allOf": [
+        { "field": "category", "equals": "ServiceHealth" },
+        { "anyOf": [
+          { "field": "properties.incidentType", "equals": "Incident" },
+          { "field": "properties.incidentType", "equals": "Maintenance" }
+        ]}
+      ]
+    },
+    "actions": {
+      "actionGroups": [
+        {
+          "actionGroupId": "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.Insights/actionGroups/migration-alerts-ag"
+        }
+      ]
+    }
+  }
+}

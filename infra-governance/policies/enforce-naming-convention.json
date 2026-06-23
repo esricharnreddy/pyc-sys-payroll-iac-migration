@@ -1,0 +1,24 @@
+{
+  "name": "enforce-naming-convention",
+  "properties": {
+    "displayName": "Enforce resource naming convention",
+    "description": "Resource names must follow organizational naming standards (prefix with resource type abbreviation)",
+    "policyType": "Custom",
+    "mode": "All",
+    "metadata": {
+      "category": "Custom"
+    },
+    "parameters": {},
+    "policyRule": {
+      "if": {
+        "not": {
+          "field": "name",
+          "match": "?*-?*-?*-?*"
+        }
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}

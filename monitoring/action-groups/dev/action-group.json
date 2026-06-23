@@ -1,0 +1,18 @@
+{
+  "name": "dev-alerts-ag",
+  "location": "Global",
+  "tags": { "Environment": "DEV", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "groupShortName": "DevAlerts",
+    "enabled": true,
+    "emailReceivers": [
+      {
+        "name": "admin-email",
+        "emailAddress": "sadugulak@virtusacsp.onmicrosoft.com",
+        "useCommonAlertSchema": true
+      }
+    ]
+  },
+  "resourceGroup": "PMI-PRD-WUS2-MIG-RG",
+  "subscription": "Azure_Practice_801755"
+}

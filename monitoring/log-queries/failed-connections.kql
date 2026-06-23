@@ -1,0 +1,6 @@
+// Failed Connections - Detect connection failures to SQL databases
+AzureMetrics
+| where MetricName == "connection_failed"
+| where Total > 10
+| summarize TotalFailed = sum(Total) by Resource, bin(TimeGenerated, 5m)
+| where TotalFailed > 10

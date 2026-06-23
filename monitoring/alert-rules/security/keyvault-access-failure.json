@@ -1,0 +1,32 @@
+{
+  "name": "keyvault-access-failure",
+  "type": "Microsoft.Insights/scheduledQueryRules",
+  "location": "westus2",
+  "tags": { "Environment": "UAT", "Application": "DBMigration", "CostCenter": "IT" },
+  "properties": {
+    "displayName": "Key Vault Access Failures",
+    "description": "Alerts when Key Vault access denied (403) exceeds threshold",
+    "severity": 1,
+    "enabled": true,
+    "evaluationFrequency": "PT5M",
+    "windowSize": "PT5M",
+    "scopes": [
+      "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.OperationalInsights/workspaces/PMI-PRD-WUS2-LAW"
+    ],
+    "criteria": {
+      "allOf": [
+        {
+          "query": "AzureDiagnostics | where ResourceProvider == 'MICROSOFT.KEYVAULT' | where httpStatusCode_d == 403 | summarize Count=count() by CallerIPAddress | where Count > 3",
+          "timeAggregation": "Count",
+          "operator": "GreaterThan",
+          "threshold": 0
+        }
+      ]
+    },
+    "actions": {
+      "actionGroups": [
+        "/subscriptions/e81f0045-b703-4020-8964-66028e11004c/resourceGroups/PMI-PRD-WUS2-MIG-RG/providers/Microsoft.Insights/actionGroups/migration-alerts-ag"
+      ]
+    }
+  }
+}
